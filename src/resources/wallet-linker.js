@@ -272,7 +272,7 @@ class WalletLinker {
       session_token: this.session_token,
       last_message_id: this.last_message_id
     })
-    if (ret.session_token) {
+    if (ret && ret.session_token) {
       this.session_token = ret.session_token
 
       if (!ret.linked && this.linked) {
@@ -322,7 +322,13 @@ class WalletLinker {
   }
 
   async post(url, body) {
-    return this.http(this.serverUrl, url, body, 'POST')
+    try {
+      return await this.http(this.serverUrl, url, body, 'POST')
+    } catch (error)
+    {
+      console.log("Error posting to bridge server:", error)
+      return
+    }
   }
 
   async get(url) {
